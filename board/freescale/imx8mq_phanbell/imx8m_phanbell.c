@@ -12,6 +12,7 @@
 #include <miiphy.h>
 #include <netdev.h>
 #include <asm/imx-common/iomux-v3.h>
+#include <asm/imx-common/boot_mode.h>
 #include <asm-generic/gpio.h>
 #include <fsl_esdhc.h>
 #include <mmc.h>
@@ -243,6 +244,18 @@ int board_late_init(void)
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 	setenv("board_name", "Phanbell");
 	setenv("board_rev", "iMX8MQ");
+#endif
+
+/* If we aren't supporting Android, set the default boot command
+ * to run boot.scr from partition one of the boot device.
+ */
+#ifndef CONFIG_ANDROID_BOOT_IMAGE
+	static char bootdev[32];
+	static char bootcmd[128];
+	snprintf(bootdev, sizeof(bootdev), "%d", mmc_get_env_dev());
+	setenv("bootdev", bootdev);
+	snprintf(bootcmd, sizeof(bootcmd), "fatload mmc %d:1 ${loadaddr} boot.scr; source", mmc_get_env_dev());
+	setenv("bootcmd", bootcmd);
 #endif
 
 #ifdef CONFIG_ENV_IS_IN_MMC
