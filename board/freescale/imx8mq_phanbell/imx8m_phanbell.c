@@ -249,7 +249,7 @@ int board_late_init(void)
 /* If we aren't supporting Android, set the default boot command
  * to run boot.scr from partition one of the boot device.
  */
-#ifndef CONFIG_ANDROID_BOOT_IMAGE
+#ifdef CONFIG_SD_BOOT
 	static char bootdev[32];
 	static char bootcmd[128];
 	snprintf(bootdev, sizeof(bootdev), "%d", mmc_get_env_dev());
