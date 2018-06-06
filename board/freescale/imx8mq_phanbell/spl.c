@@ -144,7 +144,7 @@ int board_mmc_init(bd_t *bis)
 }
 
 #ifdef CONFIG_POWER
-#define I2C_PMIC	1
+#define I2C_PMIC	0
 int power_init_board(void)
 {
 	struct pmic *p;
