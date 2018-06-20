@@ -60,6 +60,10 @@ extern void trusty_os_init(void);
 #include <fsl_avb.h>
 #endif
 
+#ifdef CONFIG_ZIRCON_BOOT_IMAGE
+#include <zircon/image.h>
+#endif
+
 #define FASTBOOT_VERSION		"0.4"
 
 #ifdef CONFIG_FASTBOOT_LOCK
@@ -85,6 +89,8 @@ extern void trusty_os_init(void);
 #if defined (CONFIG_ARCH_IMX8) || defined (CONFIG_ARCH_IMX8M)
 #define DST_DECOMPRESS_LEN 1024*1024*32
 #endif
+
+int do_boota(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]);
 
 /*
  * EP_BUFFER_SIZE must always be an integral multiple of maxpacket size
@@ -1542,7 +1548,7 @@ static struct andr_img_hdr boothdr __aligned(ARCH_DMA_MINALIGN);
 /* we can use avb to verify Trusty if we want */
 const char *requested_partitions[] = {"boot", 0};
 
-int do_boota(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
+int do_boota_avb(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 
 	ulong addr = 0;
 	struct andr_img_hdr *hdr = NULL;
@@ -1550,6 +1556,13 @@ int do_boota(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 	ulong image_size;
 	u32 avb_metric;
 	bool check_image_arm64 =  false;
+
+#ifdef CONFIG_ZIRCON_BOOT_IMAGE
+	if (argc > 2) {
+		/* assume we really want regular boot path */
+	    return do_boota(cmdtp, flag, argc, argv);
+	}
+#endif
 
 #if defined (CONFIG_ARCH_IMX8) || defined (CONFIG_ARCH_IMX8M)
 	size_t lz4_len = DST_DECOMPRESS_LEN;
@@ -1807,13 +1820,8 @@ fail:
 
 	return run_command("fastboot 0", 0);
 }
+#endif /* CONFIG_AVB_SUPPORT */
 
-U_BOOT_CMD(
-	boota,	2,	1,	do_boota,
-	"boota   - boot android bootimg \n",
-	"boot from current mmc with avb verify\n"
-);
-#else /* CONFIG_AVB_SUPPORT */
 /* boota <addr> [ mmc0 | mmc1 [ <partition> ] ] */
 int do_boota(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
@@ -1881,6 +1889,29 @@ int do_boota(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			goto fail;
 		}
 
+#ifdef CONFIG_ZIRCON_BOOT_IMAGE
+		if (zircon_image_check_header(hdr) == 0) {
+			printf("Found Zircon image\n");
+
+			image_size = zircon_image_get_end(hdr) - (ulong)hdr;
+			bootimg_sectors = (image_size + 511)/512;
+			ulong loadaddr = zircon_image_get_kload(hdr);
+			printf("Load image at 0x%lx\n", loadaddr);
+			if (mmc->block_dev.block_read(dev_desc,	pte->start, bootimg_sectors,
+					(void *)(uintptr_t)loadaddr) < 0) {
+				printf("boota: mmc failed to read bootimage\n");
+				goto fail;
+			}
+			char fboot_addr_start[32];
+			char *boot_args[] = { NULL, fboot_addr_start, NULL, NULL};
+			boot_args[0] = "bootm";
+			snprintf(fboot_addr_start, sizeof(fboot_addr_start), "0x%lx", loadaddr);
+			do_bootm(NULL, 0, 2, boot_args);
+			/* This only happens if image is somehow faulty so we start over */
+			do_reset(NULL, 0, 0, NULL);
+		}
+#endif
+
 		if (android_image_check_header(hdr)) {
 			printf("boota: bad boot image magic\n");
 			goto fail;
@@ -1891,11 +1922,11 @@ int do_boota(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
 		if (mmc->block_dev.block_read(dev_desc,	pte->start,
 					bootimg_sectors,
-					(void *)(hdr->kernel_addr - hdr->page_size)) < 0) {
+					(void *)(uintptr_t)(hdr->kernel_addr - hdr->page_size)) < 0) {
 			printf("boota: mmc failed to read bootimage\n");
 			goto fail;
 		}
-		check_image_arm64  = image_arm64((void *)hdr->kernel_addr);
+		check_image_arm64  = image_arm64((void *)(uintptr_t)hdr->kernel_addr);
 #ifdef CONFIG_FASTBOOT_LOCK
 		int verifyresult = -1;
 #endif
@@ -1909,13 +1940,13 @@ int do_boota(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		display_lock(fastboot_get_lock_stat(), verifyresult);
 #endif
 		/* load the ramdisk file */
-		memcpy((void *)hdr->ramdisk_addr, (void *)hdr->kernel_addr
+		memcpy((void *)(uintptr_t)hdr->ramdisk_addr, (void *)(uintptr_t)hdr->kernel_addr
 			+ ALIGN(hdr->kernel_size, hdr->page_size), hdr->ramdisk_size);
 
 #ifdef CONFIG_OF_LIBFDT
 		/* load the dtb file */
 		if (hdr->second_size && hdr->second_addr) {
-			memcpy((void *)hdr->second_addr, (void *)hdr->kernel_addr
+			memcpy((void *)(uintptr_t)hdr->second_addr, (void *)(uintptr_t)hdr->kernel_addr
 				+ ALIGN(hdr->kernel_size, hdr->page_size)
 				+ ALIGN(hdr->ramdisk_size, hdr->page_size), hdr->second_size);
 		}
@@ -1976,7 +2007,11 @@ fail:
 }
 
 U_BOOT_CMD(
+#if defined(CONFIG_AVB_SUPPORT) && defined(CONFIG_MMC)
+	boota,	3,	1,	do_boota_avb,
+#else
 	boota,	3,	1,	do_boota,
+#endif
 	"boota   - boot android bootimg from memory\n",
 	"[<addr> | mmc0 | mmc1 | mmc2 | mmcX] [<partition>]\n    "
 	"- boot application image stored in memory or mmc\n"
@@ -1987,7 +2022,6 @@ U_BOOT_CMD(
 	"\t 'partition' (optional) is the partition id of your device, "
 	"if no partition give, will going to 'boot' partition\n"
 );
-#endif /* CONFIG_AVB_SUPPORT */
 #endif	/* CONFIG_CMD_BOOTA */
 #endif
 

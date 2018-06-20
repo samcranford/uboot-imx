@@ -164,6 +164,20 @@ static int bootm_find_os(cmd_tbl_t *cmdtp, int flag, int argc,
 		ep_found = true;
 		break;
 #endif
+#ifdef CONFIG_ZIRCON_BOOT_IMAGE
+	case IMAGE_FORMAT_ZIRCON:
+		images.os.type = IH_TYPE_KERNEL;
+		images.os.comp =  zircon_image_get_comp(os_hdr);
+		images.os.os = IH_OS_ZIRCON;
+
+		images.os.end = zircon_image_get_end(os_hdr);
+		images.os.load = zircon_image_get_kload(os_hdr);
+		if (images.os.load == 0x10008000)
+			images.os.load = 0x1080000;
+		images.ep = images.os.load;
+		ep_found = true;
+		break;
+#endif
 	default:
 		puts("ERROR: unknown image format type!\n");
 		return 1;
@@ -459,6 +473,10 @@ static int bootm_load_os(bootm_headers_t *images, unsigned long *load_end,
 		      blob_start, blob_end);
 		debug("images.os.load = 0x%lx, load_end = 0x%lx\n", load,
 		      *load_end);
+		if (os.os == IH_OS_ZIRCON) {
+			/* no further checking is necessary */
+			return 0;
+		}
 
 		/* Check what type of image this is. */
 		if (images->legacy_hdr_valid) {
@@ -881,6 +899,15 @@ static const void *boot_get_kernel(cmd_tbl_t *cmdtp, int flag, int argc,
 	case IMAGE_FORMAT_ANDROID:
 		printf("## Booting Android Image at 0x%08lx ...\n", img_addr);
 		if (android_image_get_kernel(buf, images->verify,
+					     os_data, os_len))
+			return NULL;
+		break;
+#endif
+#ifdef CONFIG_ZIRCON_BOOT_IMAGE
+	case IMAGE_FORMAT_ZIRCON:
+		printf("## Booting Zircon Image at 0x%08lx ...\n", img_addr);
+		buf = map_sysmem(img_addr, 0);
+		if (zircon_image_get_kernel(buf, images->verify,
 					     os_data, os_len))
 			return NULL;
 		break;

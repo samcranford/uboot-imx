@@ -24,6 +24,11 @@ config ANDROID_BOOT_IMAGE
 	  This enables support for booting images which use the Android
 	  image format header.
 
+config ZIRCON_BOOT_IMAGE
+	bool "Enable support for Zircon Boot Images"
+	help
+	  This enables support for booting Zircon images.
+
 config FSL_FASTBOOT
 	bool "Enable FSL fastboot support"
 	help

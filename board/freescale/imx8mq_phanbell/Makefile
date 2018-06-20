@@ -5,6 +5,7 @@
 #
 
 obj-y += imx8m_phanbell.o
+obj-$(CONFIG_ZIRCON_BOOT_IMAGE) += zircon.o
 
 ifdef CONFIG_SPL_BUILD
 obj-y += spl.o

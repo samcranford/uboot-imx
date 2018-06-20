@@ -160,6 +160,7 @@ enum {
 	IH_OS_OSE,			/* OSE		*/
 	IH_OS_PLAN9,			/* Plan 9	*/
 	IH_OS_OPENRTOS,		/* OpenRTOS	*/
+	IH_OS_ZIRCON,		/* Zircon	*/
 
 	IH_OS_COUNT,
 };
@@ -558,6 +559,7 @@ int boot_get_setup(bootm_headers_t *images, uint8_t arch, ulong *setup_start,
 #endif
 #define IMAGE_FORMAT_FIT	0x02	/* new, libfdt based format */
 #define IMAGE_FORMAT_ANDROID	0x03	/* Android boot image */
+#define IMAGE_FORMAT_ZIRCON	0x04	/* Zircon boot image */
 
 ulong genimg_get_kernel_addr_fit(char * const img_addr,
 			         const char **fit_uname_config,
@@ -1250,6 +1252,16 @@ void android_print_contents(const struct andr_img_hdr *hdr);
 bool image_arm64(void *images);
 
 #endif /* CONFIG_ANDROID_BOOT_IMAGE */
+
+#if defined(CONFIG_ZIRCON_BOOT_IMAGE)
+struct andr_img_hdr;
+int zircon_image_check_header(const void *hdr);
+int zircon_image_get_kernel(const void* hdr, int verify,
+			     ulong *os_data, ulong *os_len);
+ulong zircon_image_get_end(const void *hdr);
+ulong zircon_image_get_kload(const void *hdr);
+ulong zircon_image_get_comp(const void *hdr);
+#endif /* CONFIG_ZIRCON_BOOT_IMAGE */
 
 /**
  * board_fit_config_name_match() - Check for a matching board name
