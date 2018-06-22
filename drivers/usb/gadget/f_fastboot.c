@@ -1194,6 +1194,7 @@ void board_fastboot_setup(void)
 	case MMC2_BOOT:
 	case MMC3_BOOT:
 	case MMC4_BOOT:
+	case USB_BOOT:
 		dev_no = mmc_get_env_dev();
 		sprintf(boot_dev_part,"mmc%d",dev_no);
 		if (!getenv("fastboot_dev"))
