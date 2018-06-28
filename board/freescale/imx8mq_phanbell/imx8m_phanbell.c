@@ -254,7 +254,7 @@ int board_late_init(void)
 	static char bootcmd[128];
 	snprintf(bootdev, sizeof(bootdev), "%d", mmc_get_env_dev());
 	setenv("bootdev", bootdev);
-	snprintf(bootcmd, sizeof(bootcmd), "fatload mmc %d:1 ${loadaddr} boot.scr; source", mmc_get_env_dev());
+	snprintf(bootcmd, sizeof(bootcmd), "ext2load mmc %d:1 ${loadaddr} boot.scr; source", mmc_get_env_dev());
 	setenv("bootcmd", bootcmd);
 #endif
 
