@@ -17,6 +17,7 @@ enum fw_type {
 
 void ddr_init_micron_3gb(void);
 void lpddr4_800M_cfg_phy(void);
+void ddr_init_micron_1gb(void);
 
 void ddr_init_hynix_1gb(void);
 

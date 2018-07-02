@@ -58,7 +58,7 @@ void spl_dram_init(void)
 			break;
 		default:
 			printf("Unknown board id!!!\n");
-			while (1) do {};
+			while (1) {};
 	}
 }
 
