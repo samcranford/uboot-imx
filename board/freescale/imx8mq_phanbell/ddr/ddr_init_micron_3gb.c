@@ -11,13 +11,6 @@
 #include <asm/arch/clock.h>
 #include "ddr.h"
 
-#ifdef CONFIG_ENABLE_DDR_TRAINING_DEBUG
-#define ddr_printf(args...) printf(args)
-#else
-#define ddr_printf(args...)
-#endif
-
-#include "wait_ddrphy_training_complete.c"
 #ifndef SRC_DDRC_RCR_ADDR
 #define SRC_DDRC_RCR_ADDR SRC_IPS_BASE_ADDR +0x1000
 #endif
@@ -28,7 +21,7 @@
 #define DDR_BOOT_P1	/* default DDR boot frequency point */
 #define WR_POST_EXT_3200
 
-volatile unsigned int tmp, tmp_t, i;
+static volatile unsigned int tmp, tmp_t, i;
 void lpddr4_800MHz_cfg_umctl2(void)
 {
 	/* Start to config, default 3200mbps */
@@ -148,7 +141,7 @@ void lpddr4_800MHz_cfg_umctl2(void)
 	dwc_ddrphy_apb_wr(DDRC_FREQ1_RFSHTMG(0), 0x00610090);
 }
 
-void ddr_init(void)
+void ddr_init_micron_3gb(void)
 {
 	reg32_write(SRC_DDRC_RCR_ADDR + 0x04, 0x8F00000F);
 	reg32_write(SRC_DDRC_RCR_ADDR, 0x8F00000F);

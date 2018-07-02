@@ -4,6 +4,13 @@
  * SPDX-License-Identifier:	GPL-2.0+
  */
 
+#include <common.h>
+#include <errno.h>
+#include <asm/io.h>
+#include <asm/arch/ddr_memory_map.h>
+#include <asm/arch/clock.h>
+#include "ddr.h"
+
 static inline void poll_pmu_message_ready(void)
 {
 	unsigned int reg;

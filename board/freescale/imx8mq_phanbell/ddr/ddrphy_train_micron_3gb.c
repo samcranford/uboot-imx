@@ -11,8 +11,6 @@
 #include "ddr.h"
 #include "lpddr4_dvfs.h"
 
-extern void wait_ddrphy_training_complete(void);
-
 void sscgpll_bypass_enable(unsigned int reg_addr)
 {
 	unsigned int read_data;
