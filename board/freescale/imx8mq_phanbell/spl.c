@@ -52,9 +52,9 @@ void spl_dram_init(void)
 	switch (board_id) {
 		case 0: ddr_init_micron_3gb();
 			break;
-		case 1: ddr_init_micron_1gb();
+		case 1: ddr_init_hynix_1gb();
 			break;
-		case 2: ddr_init_hynix_1gb();
+		case 2: ddr_init_micron_1gb();
 			break;
 		default:
 			printf("Unknown board id!!!\n");
