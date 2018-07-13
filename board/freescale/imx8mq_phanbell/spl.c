@@ -20,34 +20,14 @@
 #include <asm/imx-common/mxc_i2c.h>
 #include <fsl_esdhc.h>
 #include <mmc.h>
+#include "board_id.h"
 #include "ddr/ddr.h"
 
 DECLARE_GLOBAL_DATA_PTR;
 
-#define BOARD_ID_GPIO1	IMX_GPIO_NR(3, 22)
-#define BOARD_ID_GPIO2	IMX_GPIO_NR(3, 24)
-
-static iomux_v3_cfg_t const board_id_pads[] = {
-	IMX8MQ_PAD_SAI5_RXD1__GPIO3_IO22 | MUX_PAD_CTRL(PAD_CTL_DSE0),
-	IMX8MQ_PAD_SAI5_RXD3__GPIO3_IO24 | MUX_PAD_CTRL(PAD_CTL_DSE0),
-};
-
 void spl_dram_init(void)
 {
-	int board_id = 0;
-
-	imx_iomux_v3_setup_multiple_pads(board_id_pads,
-		ARRAY_SIZE(board_id_pads));
-
-	gpio_request(BOARD_ID_GPIO1, "board_id_1");
-	gpio_direction_input(BOARD_ID_GPIO1);
-	gpio_request(BOARD_ID_GPIO2, "board_id_2");
-	gpio_direction_input(BOARD_ID_GPIO2);
-	udelay(500);
-
-	board_id = gpio_get_value(BOARD_ID_GPIO1);
-	board_id |= gpio_get_value(BOARD_ID_GPIO2) << 1;
-
+	const int board_id = get_board_id();
 	printf("Board id: %i\n", board_id);
 	switch (board_id) {
 		case 0: ddr_init_micron_3gb();

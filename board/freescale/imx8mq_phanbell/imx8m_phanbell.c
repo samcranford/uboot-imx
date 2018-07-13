@@ -25,6 +25,7 @@
 #include <power/pmic.h>
 #include <usb.h>
 #include <dwc3-uboot.h>
+#include "board_id.h"
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -87,11 +88,14 @@ int board_postclk_init(void)
 
 int dram_init(void)
 {
+	const size_t ram_size = get_ddr_size();
+
 	/* rom_pointer[1] contains the size of TEE occupies */
-	if (rom_pointer[1])
-		gd->ram_size = PHYS_SDRAM_SIZE - rom_pointer[1];
-	else
-		gd->ram_size = PHYS_SDRAM_SIZE;
+	if (rom_pointer[1]) {
+		gd->ram_size = ram_size - rom_pointer[1];
+	} else {
+		gd->ram_size = ram_size;
+	}
 
 	return 0;
 }
@@ -225,6 +229,8 @@ int board_usb_cleanup(int index, enum usb_init_type init)
 
 int board_init(void)
 {
+	printf("Board id: %i\n", get_board_id());
+
 	board_qspi_init();
 
 #ifdef CONFIG_FEC_MXC
