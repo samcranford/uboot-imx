@@ -180,11 +180,24 @@ static void mxc_serial_putc(const char c)
 /*
  * Test whether a character is in the RX buffer
  */
+static int one_time_rx_line_always_low_workaround_needed = 1;
 static int mxc_serial_tstc(void)
 {
 	/* If receive fifo is empty, return false */
 	if (__REG(UART_PHYS + UTS) & UTS_RXEMPTY)
 		return 0;
+
+	/* Empty RX FIFO if receiver is stuck because of RXD line being low */
+	if (one_time_rx_line_always_low_workaround_needed) {
+		one_time_rx_line_always_low_workaround_needed = 0;
+		if (!(__REG(UART_PHYS + USR2) & USR2_RDR)) {
+			while (!(__REG(UART_PHYS + UTS) & UTS_RXEMPTY)) {
+				(void) __REG(UART_PHYS + URXD);
+			}
+			return 0;
+		}
+	}
+
 	return 1;
 }
 
