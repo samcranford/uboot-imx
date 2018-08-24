@@ -247,16 +247,25 @@ int board_mmc_get_env_dev(int devno)
 
 int board_late_init(void)
 {
+	char s[32] = {0};
+	int mmc_dev = mmc_get_env_dev();
+	struct mmc *mmc = find_mmc_device(mmc_dev);
+
+	if (mmc) {
+		snprintf(s, sizeof(s), "%llu", mmc->capacity_user);
+		env_set("fastboot.mmc_size", s);
+	}
+
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
-	setenv("board_name", "Phanbell");
-	setenv("board_rev", "iMX8MQ");
+	env_set("board_name", "Phanbell");
+	env_set("board_rev", "iMX8MQ");
 #endif
 
 	static char bootdev[32];
 	static char bootcmd[128];
 	snprintf(bootdev, sizeof(bootdev), "%d", mmc_get_env_dev());
 	env_set("bootdev", bootdev);
-	snprintf(bootcmd, sizeof(bootcmd), "ext2load mmc %d:1 ${loadaddr} boot.scr; source; boota mmc0 boot_a", mmc_get_env_dev());
+	snprintf(bootcmd, sizeof(bootcmd), "ext2load mmc %d:1 ${loadaddr} boot.scr; source; boota mmc0 boot_a", mmc_dev);
 	env_set("bootcmd", bootcmd);
 
 #ifdef CONFIG_ENV_IS_IN_MMC
