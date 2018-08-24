@@ -247,6 +247,15 @@ int board_mmc_get_env_dev(int devno)
 
 int board_late_init(void)
 {
+	char s[32] = {0};
+	int mmc_dev = mmc_get_env_dev();
+	struct mmc *mmc = find_mmc_device(mmc_dev);
+
+	if (mmc) {
+		snprintf(s, sizeof(s), "%llu", mmc->capacity_user);
+		setenv("fastboot.mmc_size", s);
+	}
+
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 	setenv("board_name", "Phanbell");
 	setenv("board_rev", "iMX8MQ");
@@ -258,10 +267,10 @@ int board_late_init(void)
 #ifdef CONFIG_SD_BOOT
 	static char bootdev[32];
 	static char bootcmd[128];
-	snprintf(bootdev, sizeof(bootdev), "%d", mmc_get_env_dev());
+	snprintf(bootdev, sizeof(bootdev), "%d", mmc_dev);
 	setenv("bootdev", bootdev);
 	/* For Zircon, try booting from mmc if ext2load fails */
-	snprintf(bootcmd, sizeof(bootcmd), "ext2load mmc %d:1 ${loadaddr} boot.scr; source; boota mmc0 boot_a;", mmc_get_env_dev());
+	snprintf(bootcmd, sizeof(bootcmd), "ext2load mmc %d:1 ${loadaddr} boot.scr; source; boota mmc0 boot_a;", mmc_dev);
 	setenv("bootcmd", bootcmd);
 #endif
 
