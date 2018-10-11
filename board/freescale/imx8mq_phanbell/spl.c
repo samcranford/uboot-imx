@@ -30,11 +30,16 @@ void spl_dram_init(void)
 	const int board_id = get_board_id();
 	printf("Board id: %i\n", board_id);
 	switch (board_id) {
-		case 0: ddr_init_micron_3gb();
+		case 0:
+		case 4:
+		case 7: ddr_init_micron_3gb();
 			break;
-		case 1: ddr_init_hynix_1gb();
+		case 1:
+		case 5:
+			ddr_init_hynix_1gb();
 			break;
-		case 2: ddr_init_micron_1gb();
+		case 2:
+		case 6: ddr_init_micron_1gb();
 			break;
 		default:
 			printf("Unknown board id!!!\n");
