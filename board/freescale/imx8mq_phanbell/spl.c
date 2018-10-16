@@ -35,8 +35,7 @@ void spl_dram_init(void)
 		case 7: ddr_init_micron_3gb();
 			break;
 		case 1:
-		case 5:
-			ddr_init_hynix_1gb();
+		case 5: ddr_init_hynix_1gb();
 			break;
 		case 2:
 		case 6: ddr_init_micron_1gb();

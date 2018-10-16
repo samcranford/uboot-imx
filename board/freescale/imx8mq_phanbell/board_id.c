@@ -21,6 +21,12 @@ static iomux_v3_cfg_t const board_id_pads[] = {
 	IMX8MQ_PAD_SAI5_RXFS__GPIO3_IO19 | MUX_PAD_CTRL(PAD_CTL_DSE0),
 };
 
+static iomux_v3_cfg_t const default_pads[] = {
+	IMX8MQ_PAD_SAI5_RXD1__SAI5_RX_DATA1 | MUX_PAD_CTRL(0x1816),
+	IMX8MQ_PAD_SAI5_RXD3__SAI5_RX_DATA3 | MUX_PAD_CTRL(0x16),
+	IMX8MQ_PAD_SAI5_RXFS__SAI5_RX_SYNC | MUX_PAD_CTRL(0x16),
+};
+
 int get_board_id() {
 	int board_id = 0;
 
@@ -48,6 +54,10 @@ int get_board_id() {
 	board_id |= (readl(&regs->gpio_dr) >> (BOARD_ID_GPIO2_INDEX - 1)) & 0x02;
 	board_id |= (readl(&regs->gpio_dr) >> (BOARD_ID_GPIO3_INDEX - 2)) & 0x04;
 #endif
+
+	imx_iomux_v3_setup_multiple_pads(default_pads,
+		ARRAY_SIZE(default_pads));
+
 	return board_id;
 }
 
