@@ -7,14 +7,14 @@
 #define UNKNOWN_BOARD_ID 7
 
 const char* board_id_names[] = {
-	"P0 and EVT, 3Gb Micron DDR",
-	"EVT, 1Gb Hynix DDR",
-	"EVT, 1Gb Micron DDR",
+	"P0 and EVT, 3Gb Micron DDR, SKU2",
+	"EVT, 1Gb Hynix DDR, SKU3",
+	"EVT, 1Gb Micron DDR, SKU1",
 	"Invalid",
-	"DVT, 3Gb Micron DDR",
-	"DVT, 1Gb Hynix DDR",
-	"DVT, 1Gb Micron DDR",
-	"DVT, 1Gb Micron DDR",
+	"DVT, 3Gb Micron DDR, SKU8",
+	"DVT, 1Gb Hynix DDR, SKU5",
+	"DVT, 1Gb Micron DDR, SKU6",
+	"DVT, 1Gb Micron DDR, SKU7",
 	"Unknown"
 };
 
