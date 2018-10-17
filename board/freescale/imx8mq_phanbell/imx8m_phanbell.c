@@ -240,6 +240,25 @@ int board_init(void)
 	return 0;
 }
 
+/* For boot configuration, we need to use the bootstrap info from the ROM.
+ * This function already exists in soc.c but relies on board_mmc_get_env_dev.
+ * For Phanbell, this will always yield the eMMC. To ensure we boot the
+ * bootstrapped device, use this in board_late_init.
+ */
+static int board_get_rom_mmc_dev() {
+	struct bootrom_sw_info **p =
+		is_soc_rev(CHIP_REV_1_0)? (struct bootrom_sw_info **)ROM_SW_INFO_ADDR_A0 :
+		(struct bootrom_sw_info **)ROM_SW_INFO_ADDR;
+	int devno = (*p)->boot_dev_instance;
+	u8 boot_type = (*p)->boot_dev_type;
+
+	/* If not boot from sd/mmc, use default value */
+	if ((boot_type != BOOT_TYPE_SD) && (boot_type != BOOT_TYPE_MMC))
+		return CONFIG_SYS_MMC_ENV_DEV;
+
+	return devno;
+}
+
 int board_mmc_get_env_dev(int devno)
 {
 	/*
@@ -253,11 +272,11 @@ int board_mmc_get_env_dev(int devno)
 int board_late_init(void)
 {
 	char s[32] = {0};
-	int mmc_dev = mmc_get_env_dev();
-	struct mmc *mmc = find_mmc_device(mmc_dev);
+	int mmc_dev = board_get_rom_mmc_dev();
+	struct mmc *fastboot_mmc = find_mmc_device(CONFIG_SYS_MMC_ENV_DEV);
 
-	if (mmc) {
-		snprintf(s, sizeof(s), "%llu", mmc->capacity_user);
+	if (fastboot_mmc) {
+		snprintf(s, sizeof(s), "%llu", fastboot_mmc->capacity_user);
 		setenv("fastboot.mmc_size", s);
 	}
 
