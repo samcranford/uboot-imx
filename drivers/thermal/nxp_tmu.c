@@ -90,6 +90,19 @@ static int read_temperature(struct udevice *dev, int *temp)
 	return 0;
 }
 
+#define SNVS_LPCR 0x38
+static void mx8_snvs_poweroff(void)
+{
+	u32 value;
+	void __iomem *mx8_snvs_base = (void __iomem *)SNVS_HP_BASE_ADDR;
+
+	value = readl(mx8_snvs_base + SNVS_LPCR);
+	/* Set TOP and DP_EN bit to put the PMIC into dumb mode and
+	 * explicity disable.*/
+	writel(value | 0x60, mx8_snvs_base + SNVS_LPCR);
+	/* The PMIC will pull power and execution won't continue */
+}
+
 int nxp_tmu_get_temp(struct udevice *dev, int *temp)
 {
 	struct nxp_tmu_plat *pdata = dev_get_platdata(dev);
@@ -100,8 +113,15 @@ int nxp_tmu_get_temp(struct udevice *dev, int *temp)
 	if (ret)
 		return ret;
 
+
 	while (cpu_tmp >= pdata->alert) {
-		printf("CPU Temperature (%dC) has beyond alert (%dC), close to critical (%dC)",
+		if (cpu_tmp >= pdata->critical) {
+			printf("Critical temperature hit. Shutting down,
+					a power cycle will be necessary\n");
+			mx8_snvs_poweroff();
+		}
+
+		printf("CPU Temperature (%dC) has exceeded alert (%dC), close to critical (%dC)",
 		       cpu_tmp, pdata->alert, pdata->critical);
 		puts(" waiting...\n");
 		mdelay(pdata->polling_delay);
