@@ -116,8 +116,8 @@ int nxp_tmu_get_temp(struct udevice *dev, int *temp)
 
 	while (cpu_tmp >= pdata->alert) {
 		if (cpu_tmp >= pdata->critical) {
-			printf("Critical temperature hit. Shutting down,
-					a power cycle will be necessary\n");
+			printf("Critical temperature hit. Shutting down, "
+					"a power cycle will be necessary\n");
 			mx8_snvs_poweroff();
 		}
 
