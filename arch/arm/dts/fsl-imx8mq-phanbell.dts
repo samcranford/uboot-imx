@@ -48,6 +48,18 @@
 			gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
 			enable-active-high;
 		};
+
+		reg_apex: apex_pmic {
+			compatible = "regulator-fixed";
+			regulator-name = "apex_regulators";
+			regulator-min-microvolt = <1000000>;
+			regulator-max-microvolt = <1000000>;
+			gpio = <&gpio3 15 GPIO_ACTIVE_HIGH>;
+			gpio-open-drain;
+			enable-active-high;
+			regulator-boot-on;
+			startup-delay-us = <1000000>;
+		};
 	};
 
 	modem_reset: modem-reset {
