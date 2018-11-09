@@ -11,7 +11,7 @@
 // 4 - DVT boards with 3Gb Micron (MT53B768M32D4NQ-062) DDR
 // 5 - DVT boards with 1Gb Hynix DDR
 // 6 - DVT boards with 1Gb Micron DDR
-// 7 - DVT boards with 1Gb Micron (MT53E768M32D4DT) DDR
+// 7 - DVT boards with 3Gb Micron (MT53E768M32D4DT) DDR
 
 int get_board_id(void);
 size_t get_ddr_size(void);

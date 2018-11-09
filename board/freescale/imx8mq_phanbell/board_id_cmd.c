@@ -14,7 +14,7 @@ const char* board_id_names[] = {
 	"DVT, 3Gb Micron DDR, SKU8",
 	"DVT, 1Gb Hynix DDR, SKU5",
 	"DVT, 1Gb Micron DDR, SKU6",
-	"DVT, 1Gb Micron DDR, SKU7",
+	"DVT, 3Gb Micron DDR, SKU7",
 	"Unknown"
 };
 
