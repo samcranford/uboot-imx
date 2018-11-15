@@ -19,7 +19,8 @@ void ddr_init_micron_3gb(void);
 void lpddr4_800M_cfg_phy(void);
 void ddr_init_micron_1gb(void);
 
-void ddr_init_hynix_1gb(void);
+void ddr_init_hynix_1gb_evt(void);
+void ddr_init_hynix_1gb_dvt(void);
 
 void ddr_load_train_code(enum fw_type type);
 void wait_ddrphy_training_complete(void);
