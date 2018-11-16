@@ -14,6 +14,7 @@
 // 7 - DVT boards with 3Gb Micron (MT53E768M32D4DT) DDR
 
 int get_board_id(void);
+int get_baseboard_id(void);
 size_t get_ddr_size(void);
 
 #endif

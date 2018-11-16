@@ -18,6 +18,13 @@ const char* board_id_names[] = {
 	"Unknown"
 };
 
+const char* baseboard_id_names[] = {
+	"Invalid",
+	"Enterprise",
+	"Yorktown",
+	"Unknown"
+};
+
 static int do_board_id(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	int board_id = get_board_id();
@@ -37,9 +44,35 @@ static int do_board_id(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]
 	return 0;
 }
 
+static int do_baseboard_id(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+{
+	int baseboard_id = get_baseboard_id();
+	const char* baseboard_id_name;
+
+	if (baseboard_id >= ARRAY_SIZE(baseboard_id_names)) {
+		baseboard_id_name = baseboard_id_names[ARRAY_SIZE(baseboard_id_names) - 1];
+	}
+
+	baseboard_id_name = baseboard_id_names[baseboard_id];
+
+	putc('0' + baseboard_id);
+	puts(": ");
+	puts(baseboard_id_name);
+	putc('\n');
+
+	return 0;
+}
+
 U_BOOT_CMD(
 	boardid, 1, 0, do_board_id,
 	"display board ID",
 	"\n"
 	"    - displays the board ID value from the GPIO pins."
+);
+
+U_BOOT_CMD(
+	baseboardid, 1, 0, do_baseboard_id,
+	"display baseboard ID",
+	"\n"
+	"   - displays the board ID value for the baseboard."
 );
