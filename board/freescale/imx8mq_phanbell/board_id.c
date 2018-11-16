@@ -4,6 +4,7 @@
 #include <asm/arch/imx-regs.h>
 #include <asm/imx-common/iomux-v3.h>
 #include <asm/imx-common/gpio.h>
+#include <asm/gpio.h>
 #include <asm/io.h>
 
 #define BOARD_ID_GPIOS_PORT 3

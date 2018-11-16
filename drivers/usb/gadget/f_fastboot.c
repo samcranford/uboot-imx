@@ -1564,7 +1564,7 @@ int do_boota_avb(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[]) {
 	}
 #endif
 
-#if defined (CONFIG_ARCH_IMX8) || defined (CONFIG_ARCH_IMX8M)
+#if (defined (CONFIG_ARCH_IMX8) || defined (CONFIG_ARCH_IMX8M)) && defined (CONFIG_LZ4)
 	size_t lz4_len = DST_DECOMPRESS_LEN;
 #endif
 

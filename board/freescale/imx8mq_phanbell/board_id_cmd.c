@@ -21,7 +21,7 @@ const char* board_id_names[] = {
 static int do_board_id(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	int board_id = get_board_id();
-	char* board_id_name;
+	const char* board_id_name;
 
 	if (board_id > MAX_BOARD_ID) {
 		board_id = UNKNOWN_BOARD_ID;

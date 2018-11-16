@@ -245,7 +245,7 @@ int board_init(void)
  * For Phanbell, this will always yield the eMMC. To ensure we boot the
  * bootstrapped device, use this in board_late_init.
  */
-static int board_get_rom_mmc_dev() {
+static int board_get_rom_mmc_dev(void) {
 	struct bootrom_sw_info **p =
 		is_soc_rev(CHIP_REV_1_0)? (struct bootrom_sw_info **)ROM_SW_INFO_ADDR_A0 :
 		(struct bootrom_sw_info **)ROM_SW_INFO_ADDR;
