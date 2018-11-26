@@ -230,6 +230,7 @@ int board_usb_cleanup(int index, enum usb_init_type init)
 int board_init(void)
 {
 	printf("Board id: %i\n", get_board_id());
+	printf("Baseboard id: %i\n", get_baseboard_id());
 
 	board_qspi_init();
 
@@ -279,6 +280,9 @@ int board_late_init(void)
 		snprintf(s, sizeof(s), "%llu", fastboot_mmc->capacity_user);
 		setenv("fastboot.mmc_size", s);
 	}
+
+	snprintf(s, sizeof(s), "%i", get_baseboard_id());
+	setenv("baseboardid", s);
 
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 	setenv("board_name", "Phanbell");
