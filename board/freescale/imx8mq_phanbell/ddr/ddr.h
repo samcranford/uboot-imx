@@ -4,6 +4,9 @@
  * SPDX-License-Identifier:	GPL-2.0+
  */
 
+#include <asm/io.h>
+#include <common.h>
+
 enum fw_type {
 	FW_1D_IMAGE,
 	FW_2D_IMAGE,
@@ -30,10 +33,7 @@ static inline void reg32_write(unsigned long addr, u32 val)
 	writel(val, addr);
 }
 
-static inline uint32_t reg32_read(unsigned long addr)
-{
-	return readl(addr);
-}
+static inline uint32_t reg32_read(unsigned long addr) { return readl(addr); }
 
 static void inline dwc_ddrphy_apb_wr(unsigned long addr, u32 val)
 {

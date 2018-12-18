@@ -4,21 +4,21 @@
  * SPDX-License-Identifier:	GPL-2.0+
  */
 
+#include "ddr.h"
+#include <asm/arch/clock.h>
+#include <asm/arch/ddr_memory_map.h>
+#include <asm/io.h>
 #include <common.h>
 #include <errno.h>
-#include <asm/io.h>
-#include <asm/arch/ddr_memory_map.h>
-#include <asm/arch/clock.h>
-#include "ddr.h"
 
 #ifndef SRC_DDRC_RCR_ADDR
-#define SRC_DDRC_RCR_ADDR SRC_IPS_BASE_ADDR +0x1000
+#define SRC_DDRC_RCR_ADDR SRC_IPS_BASE_ADDR + 0x1000
 #endif
 #ifndef DDR_CSD1_BASE_ADDR
 #define DDR_CSD1_BASE_ADDR 0x40000000
 #endif
 #define SILICON_TRAIN
-#define DDR_BOOT_P1	/* default DDR boot frequency point */
+#define DDR_BOOT_P1 /* default DDR boot frequency point */
 #define WR_POST_EXT_3200
 
 static volatile unsigned int tmp, tmp_t, i;
@@ -26,7 +26,7 @@ void lpddr4_800MHz_cfg_umctl2(void)
 {
 	/* Start to config, default 3200mbps */
 	/* dis_dq=1, indicates no reads or writes are issued to SDRAM */
-	 reg32_write(DDRC_DBG1(0), 0x00000001);
+	reg32_write(DDRC_DBG1(0), 0x00000001);
 	/* selfref_en=1, SDRAM enter self-refresh state */
 	reg32_write(DDRC_PWRCTL(0), 0x00000001);
 	reg32_write(DDRC_MSTR(0), 0xa3080020);
@@ -35,7 +35,7 @@ void lpddr4_800MHz_cfg_umctl2(void)
 	reg32_write(DDRC_INIT0(0), 0xC003061B);
 	reg32_write(DDRC_INIT1(0), 0x009D0000);
 	reg32_write(DDRC_INIT3(0), 0x00D4002D);
-#ifdef WR_POST_EXT_3200  // recommened to define
+#ifdef WR_POST_EXT_3200 // recommened to define
 	reg32_write(DDRC_INIT4(0), 0x00330008);
 #else
 	reg32_write(DDRC_INIT4(0), 0x00310008);
@@ -78,12 +78,14 @@ void lpddr4_800MHz_cfg_umctl2(void)
 	/* Address map is from MSB 29: r15, r14, cs, r13-r0, b2-b0, c9-c0 */
 	reg32_write(DDRC_ADDRMAP0(0), 0x00000015);
 	reg32_write(DDRC_ADDRMAP3(0), 0x00000000);
-	/* addrmap_col_b10 and addrmap_col_b11 set to de-activated (5-bit width) */
+	/* addrmap_col_b10 and addrmap_col_b11 set to de-activated (5-bit width)
+	 */
 	reg32_write(DDRC_ADDRMAP4(0), 0x00001F1F);
 	/* bank interleave */
 	/* addrmap_bank_b2, addrmap_bank_b1, addrmap_bank_b0 */
 	reg32_write(DDRC_ADDRMAP1(0), 0x00080808);
-	/* addrmap_row_b11, addrmap_row_b10_b2, addrmap_row_b1, addrmap_row_b0 */
+	/* addrmap_row_b11, addrmap_row_b10_b2, addrmap_row_b1, addrmap_row_b0
+	 */
 	reg32_write(DDRC_ADDRMAP5(0), 0x07070707);
 	/* addrmap_row_b15, addrmap_row_b14, addrmap_row_b13, addrmap_row_b12 */
 	reg32_write(DDRC_ADDRMAP6(0), 0x08080707);
@@ -149,12 +151,14 @@ void ddr_init_micron_3gb(void)
 	reg32_write(SRC_DDRC_RCR_ADDR + 0x04, 0x8F000000);
 
 	/* change the clock source of dram_apb_clk_root */
-	reg32_write(CCM_IP_CLK_ROOT_GEN_TAGET_CLR(1), (0x7<<24)|(0x7<<16));
-	reg32_write(CCM_IP_CLK_ROOT_GEN_TAGET_SET(1), (0x4<<24)|(0x3<<16));
+	reg32_write(CCM_IP_CLK_ROOT_GEN_TAGET_CLR(1),
+		    (0x7 << 24) | (0x7 << 16));
+	reg32_write(CCM_IP_CLK_ROOT_GEN_TAGET_SET(1),
+		    (0x4 << 24) | (0x3 << 16));
 
 	/* disable iso */
 	reg32_write(0x303A00EC, 0x0000ffff); /* PGC_CPU_MAPPING */
-	reg32setbit(0x303A00F8, 5); /* PU_PGC_SW_PUP_REQ */
+	reg32setbit(0x303A00F8, 5);	  /* PU_PGC_SW_PUP_REQ */
 
 	dram_pll_init(SSCG_PLL_OUT_800M);
 
@@ -170,10 +174,12 @@ void ddr_init_micron_3gb(void)
 	reg32_write(DDRC_MSTR2(0), 0x1);
 #endif
 #endif
-	/* release [1]ddr1_core_reset_n, [2]ddr1_phy_reset, [3]ddr1_phy_pwrokin_n */
+	/* release [1]ddr1_core_reset_n, [2]ddr1_phy_reset,
+	 * [3]ddr1_phy_pwrokin_n */
 	reg32_write(SRC_DDRC_RCR_ADDR, 0x8F000004);
 
-	/* release [1]ddr1_core_reset_n, [2]ddr1_phy_reset, [3]ddr1_phy_pwrokin_n */
+	/* release [1]ddr1_core_reset_n, [2]ddr1_phy_reset,
+	 * [3]ddr1_phy_pwrokin_n */
 	reg32_write(SRC_DDRC_RCR_ADDR, 0x8F000000);
 
 	reg32_write(DDRC_DBG1(0), 0x00000000);
