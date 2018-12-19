@@ -46,8 +46,12 @@ static int do_fastboot(cmd_tbl_t *cmdtp, int flag, int argc, char *const argv[])
 	while (1) {
 		if (g_dnl_detach())
 			break;
-		if (ctrlc())
-			break;
+        if (tstc()) {
+          int ch = getc();
+          if (ch == 0x03) /* ^C - Control C */
+            break;
+          puts("\rIn fastboot mode. Press Control-C to exit.\n");
+        }
 		usb_gadget_handle_interrupts(controller_index);
 	}
 
