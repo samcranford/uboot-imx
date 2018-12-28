@@ -2,6 +2,8 @@
  * Copyright 2017 NXP
  *
  * SPDX-License-Identifier:	GPL-2.0+
+ *
+ * Generated code from MX8M_DDR_tool
  */
 
 #include "ddr.h"
@@ -52,11 +54,11 @@ void ddr_cfg_phy_micron_1gb(void)
 	reg32_write(0x3c4800b8, 0x1);
 	reg32_write(0x3c240810, 0x0);
 	reg32_write(0x3c640810, 0x0);
-	reg32_write(0x3c080090, 0xab);
+	reg32_write(0x3c080090, 0x1ab);
 	reg32_write(0x3c0800e8, 0x0);
-	reg32_write(0x3c480090, 0xab);
+	reg32_write(0x3c480090, 0x1ab);
 	reg32_write(0x3c0800e8, 0x0);
-	reg32_write(0x3c080158, 0x7);
+	reg32_write(0x3c080158, 0x3);
 	reg32_write(0x3c480158, 0xa);
 	reg32_write(0x3c040134, 0xe00);
 	reg32_write(0x3c040534, 0xe00);
@@ -90,16 +92,16 @@ void ddr_cfg_phy_micron_1gb(void)
 	reg32_write(0x3c448524, 0xfbe);
 	reg32_write(0x3c44c124, 0xfbe);
 	reg32_write(0x3c44c524, 0xfbe);
-	reg32_write(0x3c00010c, 0x63);
-	reg32_write(0x3c00410c, 0x63);
-	reg32_write(0x3c00810c, 0x63);
-	reg32_write(0x3c00c10c, 0x63);
-	reg32_write(0x3c01010c, 0x63);
-	reg32_write(0x3c01410c, 0x63);
-	reg32_write(0x3c01810c, 0x63);
-	reg32_write(0x3c01c10c, 0x63);
-	reg32_write(0x3c02010c, 0x63);
-	reg32_write(0x3c02410c, 0x63);
+	reg32_write(0x3c00010c, 0xe7);
+	reg32_write(0x3c00410c, 0xe7);
+	reg32_write(0x3c00810c, 0xe7);
+	reg32_write(0x3c00c10c, 0xe7);
+	reg32_write(0x3c01010c, 0xe7);
+	reg32_write(0x3c01410c, 0xe7);
+	reg32_write(0x3c01810c, 0xe7);
+	reg32_write(0x3c01c10c, 0xe7);
+	reg32_write(0x3c02010c, 0xe7);
+	reg32_write(0x3c02410c, 0xe7);
 	reg32_write(0x3c080060, 0x3);
 	reg32_write(0x3c0801d4, 0x4);
 	reg32_write(0x3c080140, 0x0);
@@ -156,6 +158,7 @@ void ddr_cfg_phy_micron_1gb(void)
 	reg32_write(IP2APB_DDRPHY_IPS_BASE_ADDR(0) + 4 * 0x54008, 0x131f);
 	reg32_write(IP2APB_DDRPHY_IPS_BASE_ADDR(0) + 4 * 0x54009, 0xc8);
 	reg32_write(IP2APB_DDRPHY_IPS_BASE_ADDR(0) + 4 * 0x5400b, 0x2);
+	reg32_write(IP2APB_DDRPHY_IPS_BASE_ADDR(0) + 4 * 0x5400d, 0x100);
 	reg32_write(IP2APB_DDRPHY_IPS_BASE_ADDR(0) + 4 * 0x54012, 0x110);
 	reg32_write(IP2APB_DDRPHY_IPS_BASE_ADDR(0) + 4 * 0x54019, 0x2dd4);
 	reg32_write(IP2APB_DDRPHY_IPS_BASE_ADDR(0) + 4 * 0x5401a, 0x31);
@@ -267,7 +270,7 @@ void ddr_cfg_phy_micron_1gb(void)
 	tmp = reg32_read(0x303a00f8);
 	tmp |= 0x20;
 	reg32_write(0x303a00f8, tmp);
-	reg32_write(0x30360068, 0xbbe580);
+	reg32_write(0x30360068, 0xece580);
 	tmp = reg32_read(0x30360060);
 	tmp &= ~0x80;
 	reg32_write(0x30360060, tmp);
