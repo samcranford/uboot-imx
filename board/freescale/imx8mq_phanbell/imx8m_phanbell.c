@@ -293,13 +293,18 @@ int board_late_init(void)
  * to run boot.scr from partition one of the boot device.
  */
 #ifdef CONFIG_SD_BOOT
-	static char bootdev[32];
-	static char bootcmd[128];
-	snprintf(bootdev, sizeof(bootdev), "%d", mmc_dev);
-	setenv("bootdev", bootdev);
-	/* For Zircon, try booting from mmc if ext2load fails */
-	snprintf(bootcmd, sizeof(bootcmd), "ext2load mmc %d:1 ${loadaddr} boot.scr; source; boota mmc0 boot_a;", mmc_dev);
-	setenv("bootcmd", bootcmd);
+    static char bootscript[] =
+        "echo;"
+        "echo;"
+        "echo **********************************************************************;"
+        "echo         Welcome to your new Coral EdgeTPU Development Board!;"
+        "echo **********************************************************************;"
+        "echo;"
+        "echo To get started, you need to download and flash the latest firmware.;"
+        "echo Please follow the instructions at g.co/coral/setup.;"
+        "echo;"
+        "echo;";
+	setenv("bootcmd", bootscript);
 #endif
 
 #ifdef CONFIG_ENV_IS_IN_MMC
