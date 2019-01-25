@@ -303,7 +303,8 @@ int board_late_init(void)
         "echo To get started, you need to download and flash the latest firmware.;"
         "echo Please follow the instructions at g.co/coral/setup.;"
         "echo;"
-        "echo;";
+        "echo;"
+        "mmc partconf 0 0 1 1;";
 	setenv("bootcmd", bootscript);
 #endif
 
