@@ -347,7 +347,8 @@ int board_late_init(void)
         "echo Please follow the instructions at g.co/coral/setup.;"
         "echo;"
         "echo;"
-        "mmc partconf 0 0 1 1;";
+        "mmc partconf 0 0 1 1;"
+        "fastboot 0;";
 	setenv("bootcmd", bootscript);
 #endif
 
