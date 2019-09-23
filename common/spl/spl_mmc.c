@@ -64,7 +64,7 @@ static int mmc_load_image_raw_sector(struct spl_image_info *spl_image,
 
 	/* read image header to find the image size & load address */
 	count = blk_dread(mmc_get_blk_desc(mmc), sector, 1, header);
-	debug("hdr read sector %lx, count=%lu\n", sector, count);
+	printf("hdr read sector %lx, count=%lu\n", sector, count);
 	if (count == 0) {
 		ret = -EIO;
 		goto end;
