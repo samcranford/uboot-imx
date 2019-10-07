@@ -127,12 +127,16 @@ int get_baseboard_id() {
 }
 
 size_t get_ddr_size(void) {
-	const size_t k1Gb = 0x40000000;
-	const size_t k3Gb = 0xC0000000;
-	size_t ram_size = k1Gb;
+	const size_t k1GB = 0x40000000;
+	const size_t k2GB = 0x80000000;
+	const size_t k3GB = 0xC0000000;
+	size_t ram_size = k1GB;
 	const int board_id = get_board_id();
+
 	if ((board_id & 0x03) == 0 || board_id == 0x07) {
-		ram_size = k3Gb;
+		ram_size = k3GB;
+	} else if (board_id == 0x03) {
+		ram_size = k2GB;
 	}
 	return ram_size;
 }

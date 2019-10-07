@@ -34,6 +34,8 @@ void spl_dram_init(void)
 		case 4:
 		case 7: ddr_init_micron_3gb();
 			break;
+		case 3: ddr_init_kingston_2gb();
+			break;
 		case 1: // Hynix is board ID 1 (evt) and 5 (dvt) both use micron timing.
 		case 5:
 		case 2:
