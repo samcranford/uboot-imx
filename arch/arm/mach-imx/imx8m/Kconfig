@@ -60,7 +60,7 @@ config TARGET_IMX8MM_DDR4_EVK
 config TARGET_IMX8MM_COLUMBIA
 	bool "imx8mm Columbia board"
 	select IMX8MM
-	select IMX8M_DDR4
+	select IMX8M_LPDDR4
 endchoice
 
 source "board/freescale/imx8mq_evk/Kconfig"
