@@ -28,6 +28,7 @@
 #include <imx_mipi_dsi_bridge.h>
 #include <mipi_dsi_panel.h>
 #include <asm/mach-imx/video.h>
+#include <asm/mach-imx/boot_mode.h>
 #include "board_id.h"
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -479,8 +480,37 @@ struct display_info_t const displays[] = {{
 size_t display_count = ARRAY_SIZE(displays);
 #endif
 
+static int board_get_rom_mmc_dev(void) {
+	struct bootrom_sw_info **p =
+		(struct bootrom_sw_info **)ROM_SW_INFO_ADDR;
+	int devno = (*p)->boot_dev_instance;
+	u8 boot_type = (*p)->boot_dev_type;
+
+	/* If not booted from sd/mmc, use default value */
+	if ((boot_type != BOOT_TYPE_SD) && (boot_type != BOOT_TYPE_MMC))
+		return CONFIG_SYS_MMC_ENV_DEV;
+
+	return devno;
+}
+
 int board_late_init(void)
 {
+	char s[32] = {0};
+	int mmc_dev = board_get_rom_mmc_dev();
+
+	struct mmc *fastboot_mmc = find_mmc_device(CONFIG_SYS_MMC_ENV_DEV);
+	if (fastboot_mmc) {
+		snprintf(s, sizeof(s), "%llu", fastboot_mmc->capacity_user);
+		env_set("fastboot.mmc_size", s);
+	}
+
+	static char bootdev[32];
+	static char bootcmd[128];
+	snprintf(bootdev, sizeof(bootdev), "%d", mmc_dev);
+	env_set("bootdev", bootdev);
+	snprintf(bootcmd, sizeof(bootcmd), "ext2load mmc %d:1 ${loadaddr} boot.scr; source", mmc_dev);
+	env_set("bootcmd", bootcmd);
+
 #ifdef CONFIG_ENV_IS_IN_MMC
 	board_late_mmc_env_init();
 #endif
