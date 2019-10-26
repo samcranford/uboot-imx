@@ -401,19 +401,6 @@
 	sda-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 
-	typec_ptn5110_1: ptn5110@50 {
-		compatible = "usb,tcpci";
-		reg = <0x50>;
-		src-pdos = <0x380190c8>;
-		snk-pdos = <0x380190c8 0x3802d0c8>;
-		max-snk-mv = <9000>;
-		max-snk-ma = <2000>;
-		op-snk-mw = <9000>;
-		max-snk-mw = <18000>;
-		port-type = "drp";
-		default-role = "sink";
-	};
-
 	typec_ptn5110_2: ptn5110@52 {
 		compatible = "usb,tcpci";
 		reg = <0x52>;
@@ -436,12 +423,25 @@
 	scl-gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;
 	sda-gpios = <&gpio5 19 GPIO_ACTIVE_HIGH>;
 	status = "okay";
+
+	typec_ptn5110_1: ptn5110@50 {
+		compatible = "usb,tcpci";
+		reg = <0x50>;
+		src-pdos = <0x380190c8>;
+		snk-pdos = <0x380190c8 0x3802d0c8>;
+		max-snk-mv = <9000>;
+		max-snk-ma = <2000>;
+		op-snk-mw = <9000>;
+		max-snk-mw = <18000>;
+		port-type = "drp";
+		default-role = "sink";
+	};
 };
 
 &flexspi {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_flexspi>;
-	status = "okay";
+	status = "disabled";
 
 	flash0: n25q256a@0 {
 		reg = <0>;
@@ -521,4 +521,8 @@
 &usbotg2 {
 	status = "okay";
 	extcon = <&typec_ptn5110_2>;
+};
+
+&mipi_dsi {
+	status = "okay";
 };

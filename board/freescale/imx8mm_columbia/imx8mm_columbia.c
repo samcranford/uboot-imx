@@ -235,7 +235,8 @@ static int adv7535_i2c_reg_read(struct udevice *dev, uint8_t addr, uint8_t *data
 static void adv7535_init(void)
 {
 	struct udevice *bus, *main_dev, *cec_dev;
-	int i2c_bus = 1;
+        /* TODO: THIS SHOULD NOT BE HARD CODED!!! */
+	int i2c_bus = 2;
 	int ret;
 	uint8_t val;
 
