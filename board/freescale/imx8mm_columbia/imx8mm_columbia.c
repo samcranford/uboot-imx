@@ -30,6 +30,7 @@
 #include <asm/mach-imx/video.h>
 #include <asm/mach-imx/boot_mode.h>
 #include "board_id.h"
+#include "bcb.h"
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -168,6 +169,13 @@ int board_phy_config(struct phy_device *phydev)
 
 int board_ehci_usb_phy_mode(struct udevice *dev) {
 	return USB_INIT_DEVICE;
+}
+
+int fastboot_set_reboot_flag(void) {
+	char fastboot_command[32] = {0};
+	strncpy(fastboot_command, FASTBOOT_BCB_CMD, 31);
+	bcb_write_command(fastboot_command);
+	return 0;
 }
 
 int board_init(void)
