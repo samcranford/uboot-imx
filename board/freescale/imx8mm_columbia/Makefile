@@ -4,6 +4,7 @@
 # SPDX-License-Identifier:      GPL-2.0+
 #
 
+ccflags-y += -I./drivers/fastboot/fb_fsl
 obj-y += imx8mm_columbia.o board_id.o
 
 ifdef CONFIG_SPL_BUILD
