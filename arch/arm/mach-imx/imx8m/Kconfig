@@ -25,6 +25,12 @@ config TARGET_IMX8MQ_EVK
 	select IMX8MQ
 	select IMX8M_LPDDR4
 
+config TARGET_IMX8MQ_PHANBELL
+	bool "imx8mq_phanbell"
+	select IMX8MQ
+	select IMX8M_LPDDR4
+	select SUPPORT_SPL
+
 config TARGET_IMX8MQ_DDR3L_ARM2
 	bool "imx8mq_ddr3l_arm2"
 	select IMX8MQ
@@ -52,6 +58,7 @@ config TARGET_IMX8MM_EVK
 	select IMX8MM
 	select IMX8M_LPDDR4
 
+config TARGET_IMX8MQ_DDR3L_ARM2
 config TARGET_IMX8MM_DDR4_EVK
 	bool "imx8mm DDR4 EVK board"
 	select IMX8MM
@@ -62,5 +69,6 @@ source "board/freescale/imx8mq_evk/Kconfig"
 source "board/freescale/imx8mq_arm2/Kconfig"
 source "board/freescale/imx8mm_evk/Kconfig"
 source "board/freescale/imx8mm_val/Kconfig"
+source "board/freescale/imx8mq_phanbell/Kconfig"
 
 endif
