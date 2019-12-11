@@ -271,4 +271,10 @@ int is_recovery_key_pressing(void)
 	return 0; /*TODO*/
 }
 #endif /*CONFIG_ANDROID_RECOVERY*/
+
+int fastboot_set_reboot_flag()
+{
+  // Nothing needs to be done for phanbell
+  return 0;
+}
 #endif /*CONFIG_FSL_FASTBOOT*/
