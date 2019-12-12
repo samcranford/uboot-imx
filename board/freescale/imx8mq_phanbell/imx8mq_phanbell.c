@@ -1,6 +1,7 @@
 /*
  * Copyright 2016 Freescale Semiconductor, Inc.
  * Copyright 2017 NXP
+ * Copyright 2019 Google LLC
  *
  * SPDX-License-Identifier:	GPL-2.0+
  */
@@ -25,6 +26,7 @@
 #include <power/pmic.h>
 #include <usb.h>
 #include <dwc3-uboot.h>
+#include "board_id.h"
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -88,11 +90,11 @@ int board_postclk_init(void)
 int dram_init(void)
 {
 	/* rom_pointer[1] contains the size of TEE occupies */
-  // need to call function to get ram size
+	// need to call function to get ram size
 	if (rom_pointer[1])
-		gd->ram_size = PHYS_SDRAM_SIZE - rom_pointer[1];
+		gd->ram_size = get_ddr_size() - rom_pointer[1];
 	else
-		gd->ram_size = PHYS_SDRAM_SIZE;
+		gd->ram_size = get_ddr_size();
 
 	return 0;
 }

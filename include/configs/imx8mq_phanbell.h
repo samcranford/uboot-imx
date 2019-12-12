@@ -201,13 +201,13 @@
 /* Size of malloc() pool */
 #define CONFIG_SYS_MALLOC_LEN		((CONFIG_ENV_SIZE + (2 * 1024)) * 1024)
 
-/* These settings are only used internally within u-boot, so we're setting
- * PHYS_SDRAM_SIZE to 1 GB so that it works on all of our boards. u-boot
- * doesn't need more so should be just fine.
+/* For phanbell these settings are only used internally within u-boot,
+ * so we're setting PHYS_SDRAM_SIZE to 3 GB so that it works on all of our
+ * boards.
  */
 #define CONFIG_SYS_SDRAM_BASE           0x40000000
 #define PHYS_SDRAM                      0x40000000
-#define PHYS_SDRAM_SIZE			0x40000000
+#define PHYS_SDRAM_SIZE                 0xC0000000
 
 #define CONFIG_SYS_MEMTEST_START	PHYS_SDRAM
 #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + \

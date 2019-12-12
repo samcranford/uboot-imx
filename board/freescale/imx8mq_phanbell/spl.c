@@ -1,5 +1,6 @@
 /*
  * Copyright 2017 NXP
+ * Copyright 2019 Google LLC
  *
  * SPDX-License-Identifier:	GPL-2.0+
  */
@@ -22,6 +23,7 @@
 #include <fsl_esdhc.h>
 #include <mmc.h>
 #include "board_id.h"
+#include "ddr/ddr.h"
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -29,8 +31,21 @@ void spl_dram_init(void)
 {
 	const int board_id = get_board_id();
 	printf("Board id: %i\n", board_id);
-	/* ddr init */
-	ddr_init(&dram_timing);
+	switch (board_id) {
+		case 0:
+			ddr_init(&dram_timing_kingston_4gb);
+			break;
+		case 2:
+		case 6:
+			ddr_init(&dram_timing_micron_1gb);
+			break;
+		case 3:
+			ddr_init(&dram_timing_kingston_2gb);
+			break;
+		default:
+			printf("Unknown board id, No matching DDR timings!!\n");
+			while (1) {};
+	}
 }
 
 #define I2C_PAD_CTRL	(PAD_CTL_DSE6 | PAD_CTL_HYS | PAD_CTL_PUE)

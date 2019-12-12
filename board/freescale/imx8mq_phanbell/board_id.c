@@ -1,3 +1,16 @@
+/*
+ * Copyright 2019 Google LLC
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ */
+
 #include "board_id.h"
 
 #include <asm/arch/imx8mq_pins.h>
@@ -126,13 +139,37 @@ int get_baseboard_id() {
 	return baseboard_id;
 }
 
-size_t get_ddr_size(void) {
-	const size_t k1Gb = 0x40000000;
-	const size_t k3Gb = 0xC0000000;
-	size_t ram_size = k1Gb;
+phys_size_t get_ddr_size(void) {
+	const phys_size_t k1Gb = 0x40000000;
+	const phys_size_t k2Gb = 0x80000000;
+	const phys_size_t k3Gb = 0xC0000000;
+	const phys_size_t k4Gb = 0x100000000;
+	phys_size_t ram_size = 0;
 	const int board_id = get_board_id();
-	if ((board_id & 0x03) == 0 || board_id == 0x07) {
-		ram_size = k3Gb;
+
+	switch (board_id) {
+		case 0:
+		// Todo(pnordstrom) Board id 0 should be 4 Gb but currently
+		// only 3Gb works due to 32 bit checks all over u-boot and SDRAM
+		// starting at 1 Gb
+			ram_size = k3Gb;
+			break;
+		case 1:
+		case 2:
+		case 5:
+		case 6:
+			ram_size = k1Gb;
+			break;
+		case 3:
+			ram_size = k2Gb;
+			break;
+		case 4:
+		case 7:
+			ram_size = k3Gb;
+			break;
+		default:
+			break;
 	}
+
 	return ram_size;
 }
