@@ -63,7 +63,7 @@ void ddr_init_micron_1gb(void)
 	reg32_write(0x3d400000,0xa1080020);
 	reg32_write(0x3d400028,0x0);
 	reg32_write(0x3d400020,0x203);
-	reg32_write(0x3d400024,0x3e800);
+	reg32_write(0x3d400024,0x186a000);
 	reg32_write(0x3d400064,0x610090);
 	reg32_write(0x3d4000d0,0xc003061c);
 	reg32_write(0x3d4000d4,0x9e0000);
@@ -103,7 +103,7 @@ void ddr_init_micron_1gb(void)
 	reg32_write(0x3d400214,0x7070707);
 	reg32_write(0x3d400218,0xf070707);
 	reg32_write(0x3d402020,0x1);
-	reg32_write(0x3d402024,0xd0c0);
+	reg32_write(0x3d402024,0x518b00);
 	reg32_write(0x3d402050,0x20d040);
 	reg32_write(0x3d402064,0x14001f);
 	reg32_write(0x3d4020dc,0x940009);
