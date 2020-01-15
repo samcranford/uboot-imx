@@ -624,7 +624,6 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
 		reset_cpu(0);
 
 		/*NOTREACHED*/
-		return 0;
 	}
 
 	spl_perform_fixups(&spl_image);

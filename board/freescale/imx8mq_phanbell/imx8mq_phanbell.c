@@ -212,7 +212,7 @@ static void dwc3_nxp_usb_phy_init(struct dwc3_device *dwc3)
 	writel(RegData, dwc3->base + USB_PHY_CTRL1);
 }
 
-static void configure_cc_switch() {
+static void configure_cc_switch(void) {
 	uint8_t value;
 	int ret;
 	struct udevice *bus, *dev;
@@ -291,10 +291,8 @@ int board_init(void)
  * For Phanbell, this will always yield the eMMC. To ensure we boot the
  * bootstrapped device, use this in board_late_init.
  */
-static int board_get_rom_mmc_dev() {
-	struct bootrom_sw_info **p =
-		is_soc_rev(CHIP_REV_1_0)? (struct bootrom_sw_info **)ROM_SW_INFO_ADDR_A0 :
-		(struct bootrom_sw_info **)ROM_SW_INFO_ADDR;
+static int board_get_rom_mmc_dev(void) {
+	struct bootrom_sw_info **p = ROM_SW_INFO_ADDR;
 	int devno = (*p)->boot_dev_instance;
 	u8 boot_type = (*p)->boot_dev_type;
 
@@ -353,7 +351,7 @@ int is_recovery_key_pressing(void)
 }
 #endif /*CONFIG_ANDROID_RECOVERY*/
 
-int fastboot_set_reboot_flag()
+int fastboot_set_reboot_flag(void)
 {
   // Nothing needs to be done for phanbell
   return 0;
