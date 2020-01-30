@@ -18,6 +18,7 @@
 #include <asm/arch/ddr.h>
 
 extern struct dram_timing_info dram_timing_micron_1gb;
+extern struct dram_timing_info dram_timing_hynix_1gb;
 extern struct dram_timing_info dram_timing_kingston_2gb;
 extern struct dram_timing_info dram_timing_kingston_4gb;
 

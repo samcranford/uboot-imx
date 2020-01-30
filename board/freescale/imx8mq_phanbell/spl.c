@@ -42,6 +42,9 @@ void spl_dram_init(void)
 		case 3:
 			ddr_init(&dram_timing_kingston_2gb);
 			break;
+		case 5:
+			ddr_init(&dram_timing_hynix_1gb);
+			break;
 		default:
 			printf("Unknown board id, No matching DDR timings!!\n");
 			while (1) {};
