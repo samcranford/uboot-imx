@@ -107,6 +107,15 @@ int ft_board_setup(void *blob, bd_t *bd)
 }
 #endif
 
+/* Get the top of usable RAM */
+ulong board_get_usable_ram_top(ulong total_size)
+{
+	if(gd->ram_top > 0x100000000)
+	    gd->ram_top = 0x100000000;
+
+	return gd->ram_top;
+}
+
 #ifdef CONFIG_FEC_MXC
 #define FEC_RST_PAD IMX_GPIO_NR(1, 9)
 static iomux_v3_cfg_t const fec1_rst_pads[] = {

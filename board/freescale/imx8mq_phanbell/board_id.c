@@ -152,7 +152,7 @@ phys_size_t get_ddr_size(void) {
 		// Todo(pnordstrom) Board id 0 should be 4 Gb but currently
 		// only 3Gb works due to 32 bit checks all over u-boot and SDRAM
 		// starting at 1 Gb
-			ram_size = k3Gb;
+			ram_size = k4Gb;
 			break;
 		case 1:
 		case 2:
