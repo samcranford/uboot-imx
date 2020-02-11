@@ -292,6 +292,10 @@ int board_init(void)
 	setup_fec();
 #endif
 
+#if defined(CONFIG_USB_DWC3) || defined(CONFIG_USB_XHCI_IMX8M)
+	init_usb_clk();
+#endif
+
 	return 0;
 }
 
