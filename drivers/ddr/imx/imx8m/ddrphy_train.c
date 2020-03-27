@@ -7,6 +7,9 @@
 #include <linux/kernel.h>
 #include <asm/arch/ddr.h>
 #include <asm/arch/lpddr4_define.h>
+#include <asm/arch/sys_proto.h>
+
+void get_trained_CDD(unsigned int fsp);
 
 void ddr_cfg_phy(struct dram_timing_info *dram_timing)
 {
@@ -67,7 +70,12 @@ void ddr_cfg_phy(struct dram_timing_info *dram_timing)
 
 		/* Read the Message Block results */
 		dwc_ddrphy_apb_wr(0xd0000, 0x0);
+
 		ddrphy_init_read_msg_block(fsp_msg->fw_type);
+
+		if((is_imx8mq() || is_imx8mm()) && (fsp_msg->fw_type != FW_2D_IMAGE))
+			get_trained_CDD(i);
+
 		dwc_ddrphy_apb_wr(0xd0000, 0x1);
 
 		fsp_msg++;

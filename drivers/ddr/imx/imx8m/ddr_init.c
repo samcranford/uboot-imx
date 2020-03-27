@@ -11,6 +11,8 @@
 #include <asm/arch/clock.h>
 #include <asm/arch/sys_proto.h>
 
+void update_umctl2_rank_space_setting(unsigned int pstat_num);
+
 void ddr_cfg_umctl2(struct dram_cfg_param *ddrc_cfg, int num)
 {
 	int i = 0;
@@ -101,6 +103,9 @@ void ddr_init(struct dram_timing_info *dram_timing)
 	debug("DDRINFO:ddrphy config start\n");
 	ddr_cfg_phy(dram_timing);
 	debug("DDRINFO: ddrphy config done\n");
+
+	if(is_imx8mq() || is_imx8mm())
+		update_umctl2_rank_space_setting(dram_timing->fsp_msg_num-1);
 
 	/*
 	 * step14 CalBusy.0 =1, indicates the calibrator is actively
