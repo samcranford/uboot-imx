@@ -87,6 +87,10 @@ void board_fastboot_setup(void)
 		break;
 	case USB_BOOT:
 		printf("Detect USB boot. Will enter fastboot mode!\n");
+		dev_no = mmc_get_env_dev();
+		sprintf(boot_dev_part,"mmc%d",dev_no);
+		if (!env_get("fastboot_dev"))
+			env_set("fastboot_dev", boot_dev_part);
 		if (!env_get("bootcmd"))
 			env_set("bootcmd", "fastboot 0");
 		break;
