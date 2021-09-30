@@ -318,23 +318,22 @@ static int board_get_rom_mmc_dev(void) {
 
 int board_mmc_get_env_dev(int devno)
 {
-	/*
-	 * This is used for determining which MMC fastboot will flash.
-	 * For Phanbell, we should always flash the eMMC even if booting
-	 * SD. This way SD can be used for recovery.
-	 */
-	return CONFIG_SYS_MMC_ENV_DEV;
+	return devno;
 }
 
 int board_late_init(void)
 {
 	char s[32] = {0};
+	char ubootdev[32];
 	int mmc_dev = board_get_rom_mmc_dev();
 	struct mmc *fastboot_mmc = find_mmc_device(CONFIG_SYS_MMC_ENV_DEV);
 
 	if (fastboot_mmc) {
 		snprintf(s, sizeof(s), "%llu", fastboot_mmc->capacity_user);
 		env_set("fastboot.mmc_size", s);
+		/* Force fastboot to always flash the eMMC */
+		snprintf(ubootdev, sizeof(ubootdev), "%d", CONFIG_SYS_MMC_ENV_DEV);
+		env_set("target_ubootdev", ubootdev);
 	}
 
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
@@ -344,9 +343,9 @@ int board_late_init(void)
 
 	static char bootdev[32];
 	static char bootcmd[128];
-	snprintf(bootdev, sizeof(bootdev), "%d", mmc_get_env_dev());
+	snprintf(bootdev, sizeof(bootdev), "%d", mmc_dev);
 	env_set("bootdev", bootdev);
-	snprintf(bootcmd, sizeof(bootcmd), "ext2load mmc %d:1 ${loadaddr} boot.scr; source; boota mmc0 boot_a", mmc_dev);
+	snprintf(bootcmd, sizeof(bootcmd), "ext2load mmc %d:1 ${loadaddr} boot.scr; source; boota mmc%d boot_a", mmc_dev, mmc_dev);
 	env_set("bootcmd", bootcmd);
 
 	// Set up a command that will load and start the M4.
